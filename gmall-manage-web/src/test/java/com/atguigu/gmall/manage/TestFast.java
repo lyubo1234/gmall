@@ -25,7 +25,7 @@ public class TestFast {
 
         String[] uploadFile = storageClient.upload_file("d:/love.jpg", "jpg", null);
 
-        String url="http:192.168.220.134";
+        String url="http:192.168.220.137";
         for (String s : uploadFile) {
             url+="/"+s;
 

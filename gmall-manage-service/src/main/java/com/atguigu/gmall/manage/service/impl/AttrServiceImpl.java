@@ -3,14 +3,17 @@ package com.atguigu.gmall.manage.service.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.atguigu.gmall.bean.PmsBaseAttrInfo;
 import com.atguigu.gmall.bean.PmsBaseAttrValue;
+import com.atguigu.gmall.bean.PmsBaseSaleAttr;
 import com.atguigu.gmall.manage.mapper.AttrInfoMapper;
 import com.atguigu.gmall.manage.mapper.AttrValueMapper;
+import com.atguigu.gmall.manage.mapper.BaseSaleAttrMapper;
 import com.atguigu.gmall.service.AttrService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -20,12 +23,30 @@ public class AttrServiceImpl implements AttrService {
     @Autowired
     AttrValueMapper attrValueMapper;
 
-    //查询属性
+    @Autowired
+    BaseSaleAttrMapper baseSaleAttrMapper;
+
+    //查询平台属性
     @Override
     public List<PmsBaseAttrInfo> attrInfoList(String catalog3Id) {
         PmsBaseAttrInfo attrInfo = new PmsBaseAttrInfo();
         attrInfo.setCatalog3Id(catalog3Id);
-        return attrInfoMapper.select(attrInfo);
+        List<PmsBaseAttrInfo> baseAttrInfoList = attrInfoMapper.select(attrInfo);
+
+        for (PmsBaseAttrInfo pmsBaseAttrInfo : baseAttrInfoList) {
+
+            List<PmsBaseAttrValue> pmsBaseAttrValueList=new ArrayList<>();
+
+            PmsBaseAttrValue pmsBaseAttrValue = new PmsBaseAttrValue();
+
+            pmsBaseAttrValue.setAttrId(attrInfo.getId());
+
+            pmsBaseAttrValueList=attrValueMapper.select(pmsBaseAttrValue);
+
+            pmsBaseAttrInfo.setAttrValueList(pmsBaseAttrValueList);
+        }
+
+        return baseAttrInfoList;
     }
 
     @Override
@@ -77,5 +98,10 @@ public class AttrServiceImpl implements AttrService {
         PmsBaseAttrValue baseAttrValue = new PmsBaseAttrValue();
         baseAttrValue.setAttrId(attrId);
         return attrValueMapper.select(baseAttrValue);
+    }
+
+    @Override
+    public List<PmsBaseSaleAttr> findBaseSaleAttr() {
+        return baseSaleAttrMapper.selectAll();
     }
 }

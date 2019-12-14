@@ -1,9 +1,7 @@
 package com.atguigu.gmall.manage.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
-import com.atguigu.gmall.bean.PmsBaseAttrInfo;
-import com.atguigu.gmall.bean.PmsBaseSaleAttr;
-import com.atguigu.gmall.bean.PmsProductInfo;
+import com.atguigu.gmall.bean.*;
 import com.atguigu.gmall.manage.util.PmsUploadUtil;
 import com.atguigu.gmall.service.SpuInfoService;
 import org.springframework.stereotype.Controller;
@@ -17,6 +15,23 @@ import java.util.List;
 public class SpuInfoController {
     @Reference
     SpuInfoService spuInfoService;
+
+    @RequestMapping("spuImageList")
+    @ResponseBody
+    public List<PmsProductImage> spuImageList(String spuId){
+
+        List<PmsProductImage> pmsProductImages = spuInfoService.spuImageList(spuId);
+        return pmsProductImages;
+    }
+
+
+    @RequestMapping("spuSaleAttrList")
+    @ResponseBody
+    public List<PmsProductSaleAttr> spuSaleAttrList(String spuId){
+
+        List<PmsProductSaleAttr> pmsProductSaleAttrs = spuInfoService.spuSaleAttrList(spuId);
+        return pmsProductSaleAttrs;
+    }
 
     //    上传图片
     @RequestMapping("fileUpload")
@@ -41,15 +56,8 @@ public class SpuInfoController {
     @RequestMapping("saveSpuInfo")
     @ResponseBody
     public String saveSpuInfo(@RequestBody PmsProductInfo pmsProductInfo) {
-        String success = spuInfoService.saveSpuInfo(pmsProductInfo);
+        spuInfoService.saveSpuInfo(pmsProductInfo);
         return "success";
-    }
-
-    @RequestMapping("baseSaleAttrList")
-    @ResponseBody
-    public List<PmsBaseSaleAttr> baseSaleAttrList() {
-
-        return spuInfoService.saleAttrList();
     }
 
 
